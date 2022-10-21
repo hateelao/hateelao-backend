@@ -25,8 +25,8 @@ const getPost = async (req: Request, res: Response) => {
   const resultInd = findPostById(id);
 
   if (resultInd == -1)
-    res.status(400).send({
-      status: 400,
+    res.status(404).send({
+      status: 404,
       message: "that id was not found",
     });
 
