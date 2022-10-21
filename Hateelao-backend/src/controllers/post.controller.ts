@@ -25,8 +25,8 @@ const getPost = async (req: Request, res: Response) => {
   const resultInd = findPostById(id);
 
   if (resultInd == -1)
-    res.status(404).send({
-      status: 404,
+    res.status(400).send({
+      status: 400,
       message: "that id was not found",
     });
 
@@ -44,8 +44,8 @@ const updatePost = async (req: Request, res: Response) => {
   const postToUpdateInd = findPostById(id);
 
   if (postToUpdateInd == -1) {
-    res.status(404).send({
-      status: 404,
+    res.status(400).send({
+      status: 400,
       message: "that post id was not found",
     });
 
@@ -75,8 +75,8 @@ const addUser = async (req: Request, res: Response) => {
       posts[targetPostInd].users.push(userToAdd);
       res.send(userToAdd);
     } else {
-      res.status(404).send({
-        status: 404,
+      res.status(400).send({
+        status: 400,
         message: "that user id was not found",
       });
     }
@@ -97,8 +97,8 @@ const removeUser = async (req: Request, res: Response) => {
     userId
   );
   if (userInd == -1)
-    res.status(404).send({
-      status: 404,
+    res.status(400).send({
+      status: 400,
       message: "that user id was not found",
     });
   else res.send(posts[targetPostInd].users.splice(userInd));
@@ -119,8 +119,8 @@ const addPendingUser = async (req: Request, res: Response) => {
     posts[targetPostInd].users.push(userToAdd);
     res.send(userToAdd);
   } else
-    res.status(404).send({
-      status: 404,
+    res.status(400).send({
+      status: 400,
       message: "that user id was not found",
     });
 };
@@ -134,8 +134,8 @@ const removePendingUser = async (req: Request, res: Response) => {
     userId
   );
   if (userInd == -1)
-    res.status(404).send({
-      status: 404,
+    res.status(400).send({
+      status: 400,
       message: "that user id was not found",
     });
   else res.send(posts[targetPostInd].pendingUsers.splice(userInd));
@@ -151,8 +151,8 @@ const deletePost = async (req: Request, res: Response) => {
 
   const postToDeleteInd = findPostById(id);
   if (postToDeleteInd === -1)
-    res.status(404).send({
-      status: 404,
+    res.status(400).send({
+      status: 400,
       message: "that post id was not found",
     });
 
@@ -164,6 +164,10 @@ const postController = {
   getPost,
   createPost,
   updatePost,
+  addUser,
+  removeUser,
+  addPendingUser,
+  removePendingUser,
   deletePost,
 };
 
