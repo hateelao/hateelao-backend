@@ -1,3 +1,4 @@
+import { randomInt } from "crypto";
 import { Application, Request, Response } from "express";
 import { PostDto } from "../dto/post.dto";
 import userController from "./user.controller";
@@ -35,6 +36,13 @@ const getPost = async (req: Request, res: Response) => {
 
 const createPost = async (req: Request, res: Response) => {
   const post: PostDto = req.body;
+
+  if(!post.postId) post.postId = randomInt(Math.pow(2,31));
+  if(!post.title) post.title = "";
+  if(!post.partySize) post.partySize = 5;
+  if(!post.users) post.users = [];
+  if(!post.pendingUsers) post.pendingUsers = [];
+
   posts.push(post);
   res.send(post);
 };
