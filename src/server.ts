@@ -1,4 +1,5 @@
 import express, { Application, Request, Response } from "express";
+import { lobbyRouter } from "./routes/lobby.route";
 import { postRouter } from "./routes/post.route";
 import { userRouter } from "./routes/user.route";
 
@@ -15,6 +16,8 @@ app.get("/", (req: Request, res: Response) => {
 app.use("/users", userRouter);
 
 app.use("/posts", postRouter);
+
+app.use("/lobbies", lobbyRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
