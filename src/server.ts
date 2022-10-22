@@ -8,29 +8,19 @@ import { userRouter } from "./routes/user.route";
 
 const PORT: number = 8000;
 
-const mongoString =
-  "mongodb+srv://hateelengame:hateelao@hateelao.cl0ok4h.mongodb.net/test";
+const app: Application = express();
+app.use(express.json());
 
-mongoose
-  .connect(mongoString)
-  .then(() => {
-    const app: Application = express();
-    app.use(express.json());
+app.get("/", async (req: Request, res: Response) => {
+  res.send("Hello World!");
+});
 
-    app.get("/", async (req: Request, res: Response) => {
-      res.send("Hello World!");
-    });
+app.use("/users", userRouter);
 
-    app.use("/users", userRouter);
+app.use("/posts", postRouter);
 
-    app.use("/posts", postRouter);
+app.use("/lobbies", lobbyRouter);
 
-    app.use("/lobbies", lobbyRouter);
-
-    app.listen(PORT, () => {
-      console.log(`Server is running at http://localhost:${PORT}`);
-    });
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+app.listen(PORT, () => {
+  console.log(`Server is running at http://localhost:${PORT}`);
+});

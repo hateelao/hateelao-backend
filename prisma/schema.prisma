@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["mongodb"]
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  userId         String           @id @default(auto()) @map("_id") @db.ObjectId
+  displayName    String
+  photoURL       String
+  firebaseId     String           @unique
+  UserWithStatus UserWithStatus[]
+}
+
+model UserWithStatus {
+  id         String     @id @default(auto()) @map("_id") @db.ObjectId
+  user       User       @relation(fields: [userUserId], references: [userId])
+  status     UserStatus
+  userUserId String     @db.ObjectId
+  Post       Post?      @relation(fields: [postPostId], references: [postId])
+  postPostId String?    @db.ObjectId
+}
+
+enum UserStatus {
+  MEMBER
+  PENDING
+  OWNER
+}
+
+model Post {
+  postId    String           @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  partySize Int
+  users     UserWithStatus[]
+}

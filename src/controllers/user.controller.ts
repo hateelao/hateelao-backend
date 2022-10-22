@@ -6,10 +6,15 @@ const User = require("../models/user.model");
 
 const users: UserDto[] = [];
 
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
+
 // CRUD create read update delete
 
 const getUsers = async (req: Request, res: Response) => {
-  res.send(await User.find());
+  const allUsers = await prisma.user.findMany();
+  res.send(allUsers);
+  // res.send(await User.find());
 };
 
 const findUserById = async (id: number) => {
@@ -40,16 +45,14 @@ const getUser = async (req: Request, res: Response) => {
 };
 
 const createUser = async (req: Request, res: Response) => {
-  // const newUser = new User(req.body);
-  // newUser.save().then(data => {
-  //   res.send(data);
-  // })
-  // .catch(err => {
-  //   res.status(500).send({
-  //     message:
-  //       err.message || "Some error occurred while creating the User."
-  //   });
-  // });
+  const newUsers = await prisma.user.create({
+    data: {
+      displayName: req.body.displayName,
+      photoURL: req.body.photoURL,
+      firebaseId: req.body.firebaseId,
+    },
+  });
+  res.send(newUsers);
 };
 
 // id
