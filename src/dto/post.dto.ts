@@ -8,3 +8,9 @@ export interface PostDto {
   pendingUsers: UserDto[];
   owner: UserDto;
 }
+
+export interface createPostDto {
+  title: string;
+  partySize: number;
+  ownerId: string;
+}

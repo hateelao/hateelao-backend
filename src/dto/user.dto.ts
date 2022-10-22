@@ -10,3 +10,9 @@ export interface createUserDto {
   photoURL: string;
   firebaseId: string;
 }
+
+export enum UserStatus {
+  MEMBER = "MEMBER",
+  PENDING = "PENDING",
+  OWNER = "OWNER",
+}

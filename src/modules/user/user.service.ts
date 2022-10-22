@@ -1,5 +1,6 @@
 import { Application, Request, Response } from "express";
-import { UserDto, createUserDto } from "../../dto/user.dto";
+import { StringSchemaDefinition } from "mongoose";
+import { UserDto, createUserDto, UserStatus } from "../../dto/user.dto";
 
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
@@ -9,6 +10,28 @@ const getUsers = async () => {
 };
 
 const findUserInList = async (users: UserDto[], id: number) => {};
+
+const linkUserToPost = async (
+  userId: string,
+  postId: string,
+  status: UserStatus
+) => {
+  return await prisma.UserWithStatus.create({
+    data: {
+      user: {
+        connect: {
+          userId: userId,
+        },
+      },
+      status: status,
+      post: {
+        connect: {
+          postId: postId,
+        },
+      },
+    },
+  });
+};
 
 const getUser = async (id: string) => {
   return await prisma.user.findUnique({
@@ -48,6 +71,7 @@ const userService = {
   updateUser,
   deleteUser,
   findUserInList,
+  linkUserToPost,
 };
 
 export default userService;
