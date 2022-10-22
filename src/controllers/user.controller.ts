@@ -1,12 +1,15 @@
 import { Application, Request, Response } from "express";
 import { UserDto } from "../dto/user.dto";
+// import User from "../models/user.model";
+
+const User = require("../models/user.model");
 
 const users: UserDto[] = [];
 
 // CRUD create read update delete
 
 const getUsers = async (req: Request, res: Response) => {
-  res.send(users);
+  res.send(await User.find());
 };
 
 const findUserById = async (id: number) => {
@@ -37,9 +40,16 @@ const getUser = async (req: Request, res: Response) => {
 };
 
 const createUser = async (req: Request, res: Response) => {
-  const user: UserDto = req.body; // create UserDto object 'user'
-  users.push(user); // append user to userData (supposed to be database)
-  res.send(user); // send back the data that was just created
+  // const newUser = new User(req.body);
+  // newUser.save().then(data => {
+  //   res.send(data);
+  // })
+  // .catch(err => {
+  //   res.status(500).send({
+  //     message:
+  //       err.message || "Some error occurred while creating the User."
+  //   });
+  // });
 };
 
 // id

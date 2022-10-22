@@ -1,24 +1,36 @@
 import express, { Application, Request, Response } from "express";
+import mongoose from "mongoose";
+// import { User } from "./models/user.model";
+// import { MongoClient } from "mongodb";
 import { lobbyRouter } from "./routes/lobby.route";
 import { postRouter } from "./routes/post.route";
 import { userRouter } from "./routes/user.route";
 
-const app: Application = express();
-
 const PORT: number = 8000;
 
-app.use(express.json());
+const mongoString =
+  "mongodb+srv://hateelengame:hateelao@hateelao.cl0ok4h.mongodb.net/test";
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Express + TypeScript Server");
-});
+mongoose
+  .connect(mongoString)
+  .then(() => {
+    const app: Application = express();
+    app.use(express.json());
 
-app.use("/users", userRouter);
+    app.get("/", async (req: Request, res: Response) => {
+      res.send("Hello World!");
+    });
 
-app.use("/posts", postRouter);
+    app.use("/users", userRouter);
 
-app.use("/lobbies", lobbyRouter);
+    app.use("/posts", postRouter);
 
-app.listen(PORT, () => {
-  console.log(`Server is running at http://localhost:${PORT}`);
-});
+    app.use("/lobbies", lobbyRouter);
+
+    app.listen(PORT, () => {
+      console.log(`Server is running at http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  });
