@@ -1,5 +1,7 @@
+import { UserDto } from "./user.dto";
+
 export interface MessageDto {
-  author: string;
+  author: UserDto;
   message: string;
   date: Date;
 }
