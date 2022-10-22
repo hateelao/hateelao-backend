@@ -1,17 +1,26 @@
+import { triggerAsyncId } from "async_hooks";
 import { createPostDto } from "../../dto/post.dto";
-import { UserStatus } from "../../dto/user.dto";
+import { UserDto, UserStatus } from "../../dto/user.dto";
+import userService from "../user/user.service";
 
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 const getPosts = async () => {
-  return await prisma.post.findMany();
+  return await prisma.post.findMany({
+    include: {
+      users: true,
+    },
+  });
 };
 
 const getPost = async (id: string) => {
   return await prisma.post.findUnique({
     where: {
       postId: id,
+    },
+    include: {
+      users: true,
     },
   });
 };
@@ -55,7 +64,39 @@ const deletePost = async (targetId: string) => {
   });
 };
 
-const addUser = async (user: string) => {};
+const postJoinableByUser = async (userId: string, postId: string) => {
+  const targetPost = await getPost(postId);
+  if (targetPost.users.length >= targetPost.partySize) return false;
+  for (const user of targetPost.users) {
+    if (user.userId == userId) return false;
+  }
+
+  return true;
+};
+
+const addUser = async (userId: string, postId: string) => {
+  if (await postJoinableByUser(userId, postId))
+    return await userService.linkUserToPost(userId, postId, UserStatus.MEMBER);
+  return {
+    status: 400,
+    message:
+      "post is not joinable by user (either post is full or user already in post)",
+  };
+};
+
+const inviteUser = async (userId: string, postId: string) => {
+  if (await postJoinableByUser(userId, postId))
+    return await userService.linkUserToPost(userId, postId, UserStatus.PENDING);
+  return {
+    status: 400,
+    message:
+      "post is not joinable by user (either post is full or user already in post)",
+  };
+};
+
+const acceptInvitation = async (userId: string, postId: string) => {
+  return await userService.changeUserStatus(userId, postId, UserStatus.MEMBER);
+};
 
 const postService = {
   getPosts,
@@ -63,6 +104,9 @@ const postService = {
   updatePost,
   deletePost,
   createPost,
+  addUser,
+  inviteUser,
+  acceptInvitation,
 };
 
 export default postService;

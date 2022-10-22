@@ -11,6 +11,22 @@ const getUsers = async () => {
 
 const findUserInList = async (users: UserDto[], id: number) => {};
 
+const changeUserStatus = async (
+  userId: string,
+  postId: string,
+  status: UserStatus
+) => {
+  const targetUserWithStatus = prisma.UserWithStatus.update({
+    where: {
+      userId: userId,
+      postId: postId,
+    },
+    data: {
+      status: status,
+    },
+  });
+};
+
 const linkUserToPost = async (
   userId: string,
   postId: string,
@@ -72,6 +88,7 @@ const userService = {
   deleteUser,
   findUserInList,
   linkUserToPost,
+  changeUserStatus,
 };
 
 export default userService;
