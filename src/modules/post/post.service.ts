@@ -1,9 +1,31 @@
-import { createPostDto } from "../../dto/post.dto";
+import { createPostDto, PostDto } from "../../dto/post.dto";
 import { UserStatus } from "../../dto/user.dto";
 import userService from "../user/user.service";
 
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
+
+function parsePost(post: any) {
+  const result: PostDto = {
+    postId: post.postId,
+    title: post.title,
+    partySize: post.partySize,
+    users: [],
+    pendingUsers: [],
+    owner: {
+      userId: "",
+      displayName: "",
+      photoURL: "",
+      firebaseId: "",
+    },
+  };
+  for (const user of post.users) {
+    if (user.status == UserStatus.MEMBER) result.users.push(user.user);
+    else if (user.status == UserStatus.PENDING) result.users.push(user.user);
+    else if (user.status == UserStatus.OWNER) result.owner = user.user;
+  }
+  return result;
+}
 
 const getPosts = async () => {
   return await prisma.post.findMany({
@@ -126,6 +148,7 @@ const postService = {
   addUser,
   inviteUser,
   acceptInvitation,
+  parsePost,
 };
 
 export default postService;
