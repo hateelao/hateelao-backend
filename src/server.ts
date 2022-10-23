@@ -7,7 +7,7 @@ import { postRouter } from "./routes/post.route";
 import { userRouter } from "./routes/user.route";
 import { dashboardRouter } from "./routes/dashboard.route";
 
-const PORT: number = 8000;
+const PORT = process.env.PORT || 8000;
 
 const app: Application = express();
 app.use(express.json());
