@@ -48,12 +48,22 @@ const deletePost = async (req: Request, res: Response) => {
     });
 };
 
+const addUser = async (req: Request, res: Response) => {
+
+}
+
+const inviteUser = async (req: Request, res: Response) => {
+  
+}
+
 const postController = {
   getPosts,
   getPost,
   createPost,
   updatePost,
   deletePost,
+  addUser,
+  inviteUser,
 };
 
 export default postController;
