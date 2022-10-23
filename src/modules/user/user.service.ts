@@ -34,25 +34,30 @@ const linkUserToPost = async (
   postId: string,
   status: UserStatus
 ) => {
-  return await prisma.UserWithStatus.upsert({
-    where: {
+  const findRel = await prisma.UserWithStatus.findFirst({
+    where:{
       userId: userId,
-      postId: postId
-    },
-    create: {
+      postId: postId,
+    }
+  });
+  if(findRel) return {
+    status: 400,
+    message: "user already exists in post"
+  };
+  return await prisma.UserWithStatus.create({
+    data: {
       user: {
         connect: {
           userId: userId,
         },
       },
       status: status,
-      post: {
+      Post: {
         connect: {
           postId: postId,
         },
       },
     },
-    update: {},
   });
 };
 
@@ -101,26 +106,15 @@ const getUserPosts = async (userId: string) => {
 };
 
 const acceptInvite = async (userId: string, postId: string) => {
-  const search_res = await prisma.UserWithStatus.find({
+  return await prisma.UserWithStatus.updateMany({
     where: {
       userId: userId,
       postId: postId,
-      status: UserStatus.PENDING,
-    }
-  });
-  if(search_res) return await search_res.update({
+    },
     data: {
       status: UserStatus.MEMBER,
     },
-    include: {
-      user: true,
-      Post: true
-    },
   });
-  else return {
-    status: 404,
-    message: "that tuple of userid, postid, status:pending was not found"
-  };
 };
 
 const userService = {

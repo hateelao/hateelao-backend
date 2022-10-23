@@ -61,11 +61,29 @@ const updatePost = async (targetId: string, val: createPostDto) => {
 };
 
 const deletePost = async (targetId: string) => {
-  return await prisma.post.delete({
-    where: {
-      postId: targetId,
-    },
-  });
+  try{
+    const deletedPost = await prisma.post.delete({
+      where: {
+        postId: targetId,
+      },
+    });
+    const deletedUserWithStatus = await prisma.UserWithStatus.deleteMany({
+      where: {
+        postId: targetId,
+      }
+    });
+    return {
+      deletedPost: deletedPost,
+      deletedUserWithStatus: deletedUserWithStatus,
+    };
+  }
+  catch (error: any){
+    return {
+      status: 500,
+      message: "something went wrong"
+    };
+  }
+  
 };
 
 const postJoinableByUser = async (userId: string, postId: string) => {

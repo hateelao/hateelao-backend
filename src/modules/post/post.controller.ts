@@ -71,9 +71,15 @@ const inviteUsers = async (req: Request, res: Response) => {
   const users = req.body.users;
   const targetPostId = req.params.id;
   
+  const result = [];
   for(const userId of users){
-    await userService.linkUserToPost(userId, targetPostId, UserStatus.PENDING);
+    result.push({
+      userId: userId,
+      result: await userService.linkUserToPost(userId, targetPostId, UserStatus.PENDING)
+    });
   }
+
+  res.send(result);
 }
 
 const postController = {

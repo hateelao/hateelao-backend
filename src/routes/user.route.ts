@@ -10,4 +10,4 @@ userRouter.get("/:id", userController.getUser);
 userRouter.post("/", userController.createUser);
 userRouter.patch("/:id", userController.updateUser);
 userRouter.delete("/:id", userController.deleteUser);
-// userRouter.patch("/:userId/accept/", userController.)
+userRouter.patch("/:userId/accept/:postId", userController.acceptInvite);
