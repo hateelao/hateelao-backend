@@ -1,5 +1,5 @@
 export interface UserDto {
-  userId: number;
+  userId: string;
   displayName: string;
   photoURL: string;
   firebaseId: string;

@@ -1,11 +1,35 @@
 import { Request, Response } from "express";
-import { createPostDto } from "../../dto/post.dto";
+import { updateNamespaceExportDeclaration } from "typescript";
+import { createPostDto, PostDto } from "../../dto/post.dto";
 import { UserStatus } from "../../dto/user.dto";
 import userService from "../user/user.service";
 import postService from "./post.service";
 
+function parsePost(post: any) {
+  const result: PostDto = {
+    postId: post.postId,
+    title: post.title,
+    partySize: post.partySize,
+    users: [],
+    pendingUsers: [],
+    owner: {
+      userId: "",
+      displayName: "",
+      photoURL: "",
+      firebaseId: "",
+    },
+  };
+  for (const user of post.users) {
+    if (user.status == UserStatus.MEMBER) result.users.push(user.user);
+    else if (user.status == UserStatus.PENDING) result.users.push(user.user);
+    else if (user.status == UserStatus.OWNER) result.owner = user.user;
+  }
+  return result;
+}
+
 const getPosts = async (req: Request, res: Response) => {
-  const result = await postService.getPosts();
+  const posts = await postService.getPosts();
+  const result = posts.map((post: any) => parsePost(post));
   res.send(result);
 };
 
