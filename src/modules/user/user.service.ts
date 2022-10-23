@@ -15,8 +15,6 @@ const getUsers = async () => {
   return await prisma.user.findMany();
 };
 
-const findUserInList = async (users: UserDto[], id: number) => {};
-
 const changeUserStatus = async (
   userId: string,
   postId: string,
@@ -129,7 +127,6 @@ const userService = {
   createUser,
   updateUser,
   deleteUser,
-  findUserInList,
   linkUserToPost,
   changeUserStatus,
   getUserPosts,
