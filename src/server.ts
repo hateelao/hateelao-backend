@@ -1,10 +1,12 @@
 import express, { Application, Request, Response } from "express";
+import mongoose from "mongoose";
 // import { User } from "./models/user.model";
 // import { MongoClient } from "mongodb";
 import { lobbyRouter } from "./routes/lobby.route";
 import { postRouter } from "./routes/post.route";
 import { userRouter } from "./routes/user.route";
 import { dashboardRouter } from "./routes/dashboard.route";
+import cors from 'cors';
 
 const PORT = process.env.PORT || 8000;
 
@@ -28,7 +30,4 @@ app.use("/dashboard", dashboardRouter);
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
 });
-function cors(): any {
-  throw new Error("Function not implemented.");
-}
 
