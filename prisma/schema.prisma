@@ -24,7 +24,7 @@ model UserWithStatus {
   user   User       @relation(fields: [userId], references: [userId])
   status UserStatus
   userId String     @db.ObjectId
-  Post   Post      @relation(fields: [postId], references: [postId])
+  post   Post      @relation(fields: [postId], references: [postId])
   postId String    @db.ObjectId
 }
 

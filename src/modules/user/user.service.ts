@@ -6,6 +6,14 @@ import { UserDto, createUserDto, UserStatus } from "../../dto/user.dto";
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
+const getUserByFirebaseId = async (firebaseId: string) => {
+  return await prisma.User.findUnique({
+    where: {
+      firebaseId: firebaseId,
+    },
+  });
+};
+
 const getUsers = async () => {
   return await prisma.user.findMany();
 };
@@ -26,7 +34,6 @@ const changeUserStatus = async (
       status: status,
     },
   });
-   
 };
 
 const linkUserToPost = async (
@@ -35,15 +42,16 @@ const linkUserToPost = async (
   status: UserStatus
 ) => {
   const findRel = await prisma.UserWithStatus.findFirst({
-    where:{
+    where: {
       userId: userId,
       postId: postId,
-    }
+    },
   });
-  if(findRel) return {
-    status: 400,
-    message: "user already exists in post"
-  };
+  if (findRel)
+    return {
+      status: 400,
+      message: "user already exists in post",
+    };
   return await prisma.UserWithStatus.create({
     data: {
       user: {
@@ -52,7 +60,7 @@ const linkUserToPost = async (
         },
       },
       status: status,
-      Post: {
+      post: {
         connect: {
           postId: postId,
         },
@@ -100,8 +108,8 @@ const getUserPosts = async (userId: string) => {
       userId: userId,
     },
     include: {
-      Post: true,
-    }
+      post: true,
+    },
   });
 };
 
@@ -118,6 +126,7 @@ const acceptInvite = async (userId: string, postId: string) => {
 };
 
 const userService = {
+  getUserByFirebaseId,
   getUsers,
   getUser,
   createUser,

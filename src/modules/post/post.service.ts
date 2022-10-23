@@ -12,7 +12,7 @@ const getPosts = async () => {
       users: {
         include: {
           user: true,
-        }
+        },
       },
     },
   });
@@ -38,7 +38,7 @@ const createPost = async (post: createPostDto) => {
         },
       },
       status: UserStatus.OWNER,
-      Post: {
+      post: {
         create: {
           title: post.title,
           partySize: post.partySize,
@@ -61,7 +61,7 @@ const updatePost = async (targetId: string, val: createPostDto) => {
 };
 
 const deletePost = async (targetId: string) => {
-  try{
+  try {
     const deletedPost = await prisma.post.delete({
       where: {
         postId: targetId,
@@ -70,20 +70,18 @@ const deletePost = async (targetId: string) => {
     const deletedUserWithStatus = await prisma.UserWithStatus.deleteMany({
       where: {
         postId: targetId,
-      }
+      },
     });
     return {
       deletedPost: deletedPost,
       deletedUserWithStatus: deletedUserWithStatus,
     };
-  }
-  catch (error: any){
+  } catch (error: any) {
     return {
       status: 500,
-      message: "something went wrong"
+      message: "something went wrong",
     };
   }
-  
 };
 
 const postJoinableByUser = async (userId: string, postId: string) => {
