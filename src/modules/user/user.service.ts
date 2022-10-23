@@ -1,6 +1,3 @@
-import { Application, Request, Response } from "express";
-import { StringSchemaDefinition } from "mongoose";
-import { isPropertyAccessOrQualifiedName } from "typescript";
 import { UserDto, createUserDto, UserStatus } from "../../dto/user.dto";
 
 const { PrismaClient } = require("@prisma/client");

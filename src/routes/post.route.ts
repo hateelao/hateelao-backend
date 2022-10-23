@@ -1,5 +1,4 @@
 import { Router } from "express";
-import express, { Application, Request, Response } from "express";
 import postController from "../modules/post/post.controller";
 
 // => /users

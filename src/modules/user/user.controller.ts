@@ -1,4 +1,4 @@
-import { Application, Request, Response } from "express";
+import { Request, Response } from "express";
 import { createUserDto, UserDto } from "../../dto/user.dto";
 import userService from "./user.service";
 
@@ -53,15 +53,16 @@ const acceptInvite = async (req: Request, res: Response) => {
   const targetId = req.params.userId;
   const targetPostId = req.params.postId;
   const result = await userService.acceptInvite(targetId, targetPostId);
-  if(result.count == 0) res.status(400).send({
-    status: 400,
-    message: "pair user, post is not valid"
-  });
-  else{
+  if (result.count == 0)
+    res.status(400).send({
+      status: 400,
+      message: "pair user, post is not valid",
+    });
+  else {
     await userService.acceptInvite(targetId, targetPostId);
     res.send({
       userId: targetId,
-      postId: targetPostId
+      postId: targetPostId,
     });
   }
 };
@@ -72,7 +73,7 @@ const userController = {
   createUser,
   updateUser,
   deleteUser,
-  acceptInvite
+  acceptInvite,
 };
 
 export default userController;

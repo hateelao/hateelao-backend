@@ -1,6 +1,5 @@
-import { triggerAsyncId } from "async_hooks";
 import { createPostDto } from "../../dto/post.dto";
-import { UserDto, UserStatus } from "../../dto/user.dto";
+import { UserStatus } from "../../dto/user.dto";
 import userService from "../user/user.service";
 
 const { PrismaClient } = require("@prisma/client");

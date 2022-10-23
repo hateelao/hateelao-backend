@@ -1,4 +1,3 @@
-import { Application, Request, Response } from "express";
 import { dashboardDto } from "../../dto/dashboard.dto";
 import { UserStatus } from "../../dto/user.dto";
 import userService from "../user/user.service";

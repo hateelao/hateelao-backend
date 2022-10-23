@@ -1,4 +1,4 @@
-import { Application, Request, Response } from "express";
+import { Request, Response } from "express";
 import dashboardService from "./dashboard.service";
 
 const getDashboard = async (req: Request, res: Response) => {
