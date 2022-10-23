@@ -6,6 +6,7 @@ import { lobbyRouter } from "./routes/lobby.route";
 import { postRouter } from "./routes/post.route";
 import { userRouter } from "./routes/user.route";
 import { dashboardRouter } from "./routes/dashboard.route";
+import { exploreRouter } from "./routes/explore.route";
 import cors from 'cors';
 
 const PORT = process.env.PORT || 8000;
@@ -26,6 +27,8 @@ app.use("/posts", postRouter);
 // app.use("/lobbies", lobbyRouter);
 
 app.use("/dashboard", dashboardRouter);
+
+app.use("/explore", exploreRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
