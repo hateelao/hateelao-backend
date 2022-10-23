@@ -5,7 +5,7 @@ import { getAllPosts } from "./post.controller";
 
 const getDashboard = async (req: Request, res: Response) => {
   const dashboard: dashboardDto = { party: [], pendingParty: [] };
-  const userId = parseInt(req.params.id);
+  const userId = req.params.id;
   const posts = getAllPosts();
   for (let i = 0; i < posts.length; i++) {
     const post = posts[i];
