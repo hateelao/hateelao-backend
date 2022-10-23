@@ -9,7 +9,11 @@ const prisma = new PrismaClient();
 const getPosts = async () => {
   return await prisma.post.findMany({
     include: {
-      users: true,
+      users: {
+        include: {
+          user: true,
+        }
+      },
     },
   });
 };
