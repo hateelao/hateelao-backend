@@ -20,7 +20,7 @@ const getDashboard = async (req: Request, res: Response) => {
         break;
       }
     }
-    //if (post.owner.userId == userId) {
+    if (post.owner.userId == userId) {
       dashboard.party.push(post);
     }
     for (let j = 0; j < pendingUsers.length; j++) {
