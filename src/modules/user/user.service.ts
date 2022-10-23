@@ -1,5 +1,6 @@
 import { Application, Request, Response } from "express";
 import { StringSchemaDefinition } from "mongoose";
+import { isPropertyAccessOrQualifiedName } from "typescript";
 import { UserDto, createUserDto, UserStatus } from "../../dto/user.dto";
 
 const { PrismaClient } = require("@prisma/client");
@@ -16,7 +17,7 @@ const changeUserStatus = async (
   postId: string,
   status: UserStatus
 ) => {
-  const targetUserWithStatus = prisma.UserWithStatus.update({
+  return await prisma.UserWithStatus.update({
     where: {
       userId: userId,
       postId: postId,
@@ -25,6 +26,7 @@ const changeUserStatus = async (
       status: status,
     },
   });
+   
 };
 
 const linkUserToPost = async (
@@ -32,8 +34,12 @@ const linkUserToPost = async (
   postId: string,
   status: UserStatus
 ) => {
-  return await prisma.UserWithStatus.create({
-    data: {
+  return await prisma.UserWithStatus.upsert({
+    where: {
+      userId: userId,
+      postId: postId
+    },
+    create: {
       user: {
         connect: {
           userId: userId,
@@ -46,6 +52,7 @@ const linkUserToPost = async (
         },
       },
     },
+    update: {},
   });
 };
 
@@ -56,11 +63,13 @@ const getUser = async (id: string) => {
     },
   });
 };
+
 const createUser = async (user: createUserDto) => {
   return await prisma.user.create({
     data: { ...user },
   });
 };
+
 const updateUser = async (targetId: string, val: createUserDto) => {
   return await prisma.user.update({
     where: {
@@ -80,6 +89,40 @@ const deleteUser = async (targetId: string) => {
   });
 };
 
+const getUserPosts = async (userId: string) => {
+  return await prisma.UserWithStatus.findMany({
+    where: {
+      userId: userId,
+    },
+    include: {
+      Post: true,
+    }
+  });
+};
+
+const acceptInvite = async (userId: string, postId: string) => {
+  const search_res = await prisma.UserWithStatus.find({
+    where: {
+      userId: userId,
+      postId: postId,
+      status: UserStatus.PENDING,
+    }
+  });
+  if(search_res) return await search_res.update({
+    data: {
+      status: UserStatus.MEMBER,
+    },
+    include: {
+      user: true,
+      Post: true
+    },
+  });
+  else return {
+    status: 404,
+    message: "that tuple of userid, postid, status:pending was not found"
+  };
+};
+
 const userService = {
   getUsers,
   getUser,
@@ -89,6 +132,8 @@ const userService = {
   findUserInList,
   linkUserToPost,
   changeUserStatus,
+  getUserPosts,
+  acceptInvite,
 };
 
 export default userService;

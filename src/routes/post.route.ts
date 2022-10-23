@@ -9,4 +9,6 @@ postRouter.get("/", postController.getPosts);
 postRouter.get("/:id", postController.getPost);
 postRouter.post("/", postController.createPost);
 postRouter.patch("/:id", postController.updatePost);
+postRouter.patch("/:id/users/add", postController.addUsers);
+postRouter.patch("/:id/users/invite", postController.inviteUsers);
 postRouter.delete("/:id", postController.deletePost);

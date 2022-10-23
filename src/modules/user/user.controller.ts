@@ -6,8 +6,6 @@ const getUsers = async (req: Request, res: Response) => {
   res.send(await userService.getUsers());
 };
 
-const findUserInList = async (checkUsers: UserDto[], id: number) => {};
-
 const getUser = async (req: Request, res: Response) => {
   const id = req.params.id;
   const result = await userService.getUser(id);
@@ -29,6 +27,7 @@ const createUser = async (req: Request, res: Response) => {
       message: "that user id was not found",
     });
 };
+
 const updateUser = async (req: Request, res: Response) => {
   const updateVal: createUserDto = req.body;
   const result = await userService.updateUser(req.params.id, updateVal);
@@ -50,13 +49,16 @@ const deleteUser = async (req: Request, res: Response) => {
     });
 };
 
+const acceptInvite = async (req: Request, res: Response) => {
+  // const targetId
+};
+
 const userController = {
   getUsers,
   getUser,
   createUser,
   updateUser,
   deleteUser,
-  findUserInList,
 };
 
 export default userController;

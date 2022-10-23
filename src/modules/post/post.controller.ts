@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { createPostDto } from "../../dto/post.dto";
+import { UserStatus } from "../../dto/user.dto";
+import userService from "../user/user.service";
 import postService from "./post.service";
 
 const getPosts = async (req: Request, res: Response) => {
@@ -48,12 +50,30 @@ const deletePost = async (req: Request, res: Response) => {
     });
 };
 
-const addUser = async (req: Request, res: Response) => {
+const addUsers = async (req: Request, res: Response) => {
+  const users = req.body.users;
+  const targetPostId = req.params.id;
+  const targetPost = await postService.getPost(targetPostId);
 
+  if(users.length + targetPost.users.length > targetPost.partySize) res.status(400).send({
+    status: 400,
+    message: "number of users to add exceeds max party size"
+  });
+
+  else{
+    for(const userId of users){
+      await userService.linkUserToPost(userId, targetPostId, UserStatus.MEMBER);
+    }
+  }
 }
 
-const inviteUser = async (req: Request, res: Response) => {
+const inviteUsers = async (req: Request, res: Response) => {
+  const users = req.body.users;
+  const targetPostId = req.params.id;
   
+  for(const userId of users){
+    await userService.linkUserToPost(userId, targetPostId, UserStatus.PENDING);
+  }
 }
 
 const postController = {
@@ -62,8 +82,8 @@ const postController = {
   createPost,
   updatePost,
   deletePost,
-  addUser,
-  inviteUser,
+  addUsers,
+  inviteUsers,
 };
 
 export default postController;
