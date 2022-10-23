@@ -17,6 +17,7 @@ model User {
   photoURL       String
   firebaseId     String           @unique
   UserWithStatus UserWithStatus[]
+  Message        Message[]
 }
 
 model UserWithStatus {
@@ -24,8 +25,8 @@ model UserWithStatus {
   user   User       @relation(fields: [userId], references: [userId])
   status UserStatus
   userId String     @db.ObjectId
-  post   Post      @relation(fields: [postId], references: [postId])
-  postId String    @db.ObjectId
+  post   Post       @relation(fields: [postId], references: [postId])
+  postId String     @db.ObjectId
 }
 
 enum UserStatus {
@@ -39,4 +40,15 @@ model Post {
   title     String
   partySize Int
   users     UserWithStatus[]
+  chat      Message[]
+}
+
+model Message {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  author     User     @relation(fields: [userId], references: [userId])
+  content    String
+  date       DateTime
+  post       Post?    @relation(fields: [postId], references: [postId])
+  postId     String?  @db.ObjectId
+  userId     String   @db.ObjectId
 }

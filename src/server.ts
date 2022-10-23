@@ -7,14 +7,14 @@ import { postRouter } from "./routes/post.route";
 import { userRouter } from "./routes/user.route";
 import { dashboardRouter } from "./routes/dashboard.route";
 import { exploreRouter } from "./routes/explore.route";
-import cors from 'cors';
+import cors from "cors";
 
 const PORT = process.env.PORT || 8000;
 
 const app: Application = express();
 
 app.use(express.json());
-app.use(cors())
+app.use(cors());
 
 app.get("/", async (req: Request, res: Response) => {
   res.send("Hello World!");
@@ -24,7 +24,7 @@ app.use("/users", userRouter);
 
 app.use("/posts", postRouter);
 
-// app.use("/lobbies", lobbyRouter);
+app.use("/lobbies", lobbyRouter);
 
 app.use("/dashboard", dashboardRouter);
 
@@ -33,4 +33,3 @@ app.use("/explore", exploreRouter);
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
 });
-
