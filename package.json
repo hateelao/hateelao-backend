@@ -13,7 +13,10 @@
     "nodemon": "^2.0.20"
   },
   "scripts": {
+    "build": "rimraf dist && tsc",
     "dev": "nodemon src/server.ts",
-    "start": "node src/server.ts"
+    "start": "cross-env NODE_ENV=production node dist/server.js",
+    "prestart": "npm run build",
+    "typecheck": "tsc --noEmit"
   }
 }
