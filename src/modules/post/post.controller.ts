@@ -55,32 +55,44 @@ const addUsers = async (req: Request, res: Response) => {
   const targetPostId = req.params.id;
   const targetPost = await postService.getPost(targetPostId);
 
-  if(users.length + targetPost.users.length > targetPost.partySize) res.status(400).send({
-    status: 400,
-    message: "number of users to add exceeds max party size"
-  });
-
-  else{
-    for(const userId of users){
-      await userService.linkUserToPost(userId, targetPostId, UserStatus.MEMBER);
+  if (users.length + targetPost.users.length > targetPost.partySize)
+    res.status(400).send({
+      status: 400,
+      message: "number of users to add exceeds max party size",
+    });
+  else {
+    const results: any[] = [];
+    for (const userId of users) {
+      results.push(
+        await userService.linkUserToPost(
+          userId,
+          targetPostId,
+          UserStatus.MEMBER
+        )
+      );
     }
+    res.send(results);
   }
-}
+};
 
 const inviteUsers = async (req: Request, res: Response) => {
   const users = req.body.users;
   const targetPostId = req.params.id;
-  
+
   const result = [];
-  for(const userId of users){
+  for (const userId of users) {
     result.push({
       userId: userId,
-      result: await userService.linkUserToPost(userId, targetPostId, UserStatus.PENDING)
+      result: await userService.linkUserToPost(
+        userId,
+        targetPostId,
+        UserStatus.PENDING
+      ),
     });
   }
 
   res.send(result);
-}
+};
 
 const postController = {
   getPosts,
