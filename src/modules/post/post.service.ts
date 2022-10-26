@@ -55,7 +55,7 @@ const createPost = async (post: createPostDto) => {
     data: {
       user: {
         connect: {
-          userId: post.ownerId,
+          firebaseId: post.ownerFirebaseId,
         },
       },
       status: UserStatus.OWNER,
@@ -105,19 +105,23 @@ const deletePost = async (targetId: string) => {
   }
 };
 
-const postJoinableByUser = async (userId: string, postId: string) => {
+const postJoinableByUser = async (userFirebaseId: string, postId: string) => {
   const targetPost = await getPost(postId);
   if (targetPost.users.length >= targetPost.partySize) return false;
   for (const user of targetPost.users) {
-    if (user.userId == userId) return false;
+    if (user.firebaseId == userFirebaseId) return false;
   }
 
   return true;
 };
 
-const addUser = async (userId: string, postId: string) => {
-  if (await postJoinableByUser(userId, postId))
-    return await userService.linkUserToPost(userId, postId, UserStatus.MEMBER);
+const addUser = async (userFirebaseId: string, postId: string) => {
+  if (await postJoinableByUser(userFirebaseId, postId))
+    return await userService.linkUserToPost(
+      userFirebaseId,
+      postId,
+      UserStatus.MEMBER
+    );
   return {
     status: 400,
     message:

@@ -9,4 +9,7 @@ userRouter.get("/:id", userController.getUser);
 userRouter.post("/", userController.createUser);
 userRouter.patch("/:id", userController.updateUser);
 userRouter.delete("/:id", userController.deleteUser);
-userRouter.patch("/:userId/accept/:postId", userController.acceptInvite);
+userRouter.patch(
+  "/:userFirebaseId/accept/:postId",
+  userController.acceptInvite
+);

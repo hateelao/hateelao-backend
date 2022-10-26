@@ -12,5 +12,5 @@ export interface PostDto {
 export interface createPostDto {
   title: string;
   partySize: number;
-  ownerId: string;
+  ownerFirebaseId: string;
 }

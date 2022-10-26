@@ -7,8 +7,8 @@ const getUsers = async (req: Request, res: Response) => {
 };
 
 const getUser = async (req: Request, res: Response) => {
-  const id = req.params.id;
-  const result = await userService.getUser(id);
+  const firebaseId = req.params.id;
+  const result = await userService.getUserByFirebaseId(firebaseId);
   if (result) res.send(result);
   else
     res.status(404).send({
@@ -19,13 +19,7 @@ const getUser = async (req: Request, res: Response) => {
 
 const createUser = async (req: Request, res: Response) => {
   const user: createUserDto = req.body;
-  const result = await userService.createUser(user);
-  if (result) res.send(result);
-  else
-    res.status(404).send({
-      status: 404,
-      message: "that user id was not found",
-    });
+  res.send(await userService.createUser(user));
 };
 
 const updateUser = async (req: Request, res: Response) => {
@@ -35,7 +29,7 @@ const updateUser = async (req: Request, res: Response) => {
   else
     res.status(404).send({
       status: 404,
-      message: "that user id was not found",
+      message: "that user firebaseid was not found",
     });
 };
 
@@ -45,23 +39,23 @@ const deleteUser = async (req: Request, res: Response) => {
   else
     res.status(404).send({
       status: 404,
-      message: "that user id was not found",
+      message: "that user firebaseid was not found",
     });
 };
 
 const acceptInvite = async (req: Request, res: Response) => {
-  const targetId = req.params.userId;
+  const targetFirebaseId = req.params.userFirebaseId;
   const targetPostId = req.params.postId;
-  const result = await userService.acceptInvite(targetId, targetPostId);
+  const result = await userService.acceptInvite(targetFirebaseId, targetPostId);
   if (result.count == 0)
     res.status(400).send({
       status: 400,
       message: "pair user, post is not valid",
     });
   else {
-    await userService.acceptInvite(targetId, targetPostId);
+    await userService.acceptInvite(targetFirebaseId, targetPostId);
     res.send({
-      userId: targetId,
+      userFirebaseId: targetFirebaseId,
       postId: targetPostId,
     });
   }

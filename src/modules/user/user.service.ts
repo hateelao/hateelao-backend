@@ -32,13 +32,15 @@ const changeUserStatus = async (
 };
 
 const linkUserToPost = async (
-  userId: string,
+  userFirebaseId: string,
   postId: string,
   status: UserStatus
 ) => {
   const findRel = await prisma.UserWithStatus.findFirst({
     where: {
-      userId: userId,
+      user: {
+        firebaseId: userFirebaseId,
+      },
       postId: postId,
     },
   });
@@ -51,7 +53,7 @@ const linkUserToPost = async (
     data: {
       user: {
         connect: {
-          userId: userId,
+          firebaseId: userFirebaseId,
         },
       },
       status: status,
@@ -78,10 +80,10 @@ const createUser = async (user: createUserDto) => {
   });
 };
 
-const updateUser = async (targetId: string, val: createUserDto) => {
+const updateUser = async (targetFirebaseId: string, val: createUserDto) => {
   return await prisma.user.update({
     where: {
-      userId: targetId,
+      firebaseId: targetFirebaseId,
     },
     data: {
       ...val,
@@ -89,10 +91,10 @@ const updateUser = async (targetId: string, val: createUserDto) => {
   });
 };
 
-const deleteUser = async (targetId: string) => {
+const deleteUser = async (targetFirebaseId: string) => {
   return await prisma.user.delete({
     where: {
-      userId: targetId,
+      firebaseId: targetFirebaseId,
     },
   });
 };
@@ -108,10 +110,12 @@ const getUserPosts = async (userId: string) => {
   });
 };
 
-const acceptInvite = async (userId: string, postId: string) => {
+const acceptInvite = async (userFirebaseId: string, postId: string) => {
   return await prisma.UserWithStatus.updateMany({
     where: {
-      userId: userId,
+      user: {
+        firebaseId: userFirebaseId,
+      },
       postId: postId,
     },
     data: {
