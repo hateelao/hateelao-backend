@@ -4,8 +4,8 @@ import lobbyService from "./lobby.service";
 
 const getLobby = async (req: Request, res: Response) => {
   const postId: string = req.params.id;
-  const userId: string = req.body.userId;
-  res.send(await lobbyService.getLobby(userId, postId));
+  const userFirebaseId: string = req.params.userFirebaseId;
+  res.send(await lobbyService.getLobby(userFirebaseId, postId));
 };
 
 const addMessage = async (req: Request, res: Response) => {

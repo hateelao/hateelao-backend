@@ -21,7 +21,6 @@ const getLobby = async (userFirebaseId: string, postId: string) => {
       },
     },
   });
-
   if (!findResult)
     return {
       status: 400,
