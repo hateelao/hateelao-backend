@@ -9,10 +9,10 @@ const getLobby = async (req: Request, res: Response) => {
 };
 
 const addMessage = async (req: Request, res: Response) => {
-  const authorId = req.body.authorId;
+  const authorFirebaseId = req.body.authorFirebaseId;
   const postId = req.params.postId;
   const content = req.body.content;
-  res.send(await lobbyService.addMessage(authorId, postId, content));
+  res.send(await lobbyService.addMessage(authorFirebaseId, postId, content));
 };
 
 const lobbyController = {

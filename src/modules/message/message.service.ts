@@ -18,7 +18,7 @@ const getChat = async (postId: string) => {
 };
 
 const createMessage = async (
-  authorId: string,
+  authorFirebaseId: string,
   postId: string,
   content: string
 ) => {
@@ -27,7 +27,7 @@ const createMessage = async (
       data: {
         author: {
           connect: {
-            userId: authorId,
+            firebaseId: authorFirebaseId,
           },
         },
         content: content,

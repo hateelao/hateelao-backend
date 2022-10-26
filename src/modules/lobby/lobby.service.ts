@@ -5,10 +5,12 @@ import messageService from "../message/message.service";
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-const getLobby = async (userId: string, postId: string) => {
+const getLobby = async (userFirebaseId: string, postId: string) => {
   const findResult = await prisma.UserWithStatus.findFirst({
     where: {
-      userId: userId,
+      user: {
+        firebaseId: userFirebaseId,
+      },
       postId: postId,
     },
     include: {
@@ -37,11 +39,11 @@ const getLobby = async (userId: string, postId: string) => {
 };
 
 const addMessage = async (
-  authorId: string,
+  authorFirebaseId: string,
   postId: string,
   content: string
 ) => {
-  return await messageService.createMessage(authorId, postId, content);
+  return await messageService.createMessage(authorFirebaseId, postId, content);
 };
 
 const lobbyService = {
