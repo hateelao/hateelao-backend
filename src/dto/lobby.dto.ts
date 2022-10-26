@@ -5,5 +5,10 @@ import { UserStatus } from "./user.dto";
 export interface LobbyDto {
   post: PostDto;
   chat: MessageDto[];
-  status: UserStatus;
+  status: LobbyStatus;
+}
+
+export enum LobbyStatus {
+  JOINED = "JOINED",
+  NOT_JOINED = "NOT_JOINED",
 }

@@ -1,38 +1,40 @@
-import { LobbyDto } from "../../dto/lobby.dto";
+import { LobbyDto, LobbyStatus } from "../../dto/lobby.dto";
 import { MessageDto } from "../../dto/message.dto";
 import messageService from "../message/message.service";
+import postService from "../post/post.service";
 
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
+function isUserFirebaseIdInList(users: any[], userFirebaseId: string) {
+  for (const user of users) {
+    if (user.firebaseId == userFirebaseId) return true;
+  }
+  return false;
+}
+
 const getLobby = async (userFirebaseId: string, postId: string) => {
-  const findResult = await prisma.UserWithStatus.findFirst({
-    where: {
-      user: {
-        firebaseId: userFirebaseId,
-      },
-      postId: postId,
-    },
-    include: {
-      post: {
-        select: {
-          users: true,
-        },
-      },
-    },
-  });
-  if (!findResult)
+  const findResult = await postService.getPost(postId);
+
+  if (!findResult) {
     return {
-      status: 400,
-      message: "user is not in post or user and/or post does not exist",
+      status: 404,
+      message: "post id was not found",
     };
+  }
+  const outStatus: LobbyStatus = isUserFirebaseIdInList(
+    findResult.users,
+    postId
+  )
+    ? LobbyStatus.JOINED
+    : LobbyStatus.NOT_JOINED;
 
   const chatResult: MessageDto[] = await messageService.getChat(postId);
 
   const result: LobbyDto = {
     post: findResult.post,
     chat: chatResult,
-    status: findResult.status,
+    status: outStatus,
   };
   return result;
 };
