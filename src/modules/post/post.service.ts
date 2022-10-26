@@ -45,7 +45,11 @@ const getPost = async (id: string) => {
       postId: id,
     },
     include: {
-      users: true,
+      users: {
+        include: {
+          user: true,
+        },
+      },
     },
   });
 };

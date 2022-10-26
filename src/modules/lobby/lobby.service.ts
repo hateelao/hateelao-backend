@@ -16,7 +16,8 @@ function isUserFirebaseIdInList(users: any[], userId: string) {
 
 const getLobby = async (userFirebaseId: string, postId: string) => {
   const findResult = await postService.getPost(postId);
-  const userId = (await userService.getUserByFirebaseId(userFirebaseId)).userId;
+  const user = await userService.getUserByFirebaseId(userFirebaseId);
+  const userId = user ? user.userId : "";
 
   if (!findResult) {
     return {
@@ -35,7 +36,7 @@ const getLobby = async (userFirebaseId: string, postId: string) => {
     outStatus == LobbyStatus.JOINED ? await messageService.getChat(postId) : [];
 
   const result: LobbyDto = {
-    post: findResult,
+    post: postService.parsePost(findResult),
     chat: chatResult,
     status: outStatus,
   };

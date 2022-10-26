@@ -10,7 +10,7 @@ const getPosts = async (req: Request, res: Response) => {
 
 const getPost = async (req: Request, res: Response) => {
   const result = await postService.getPost(req.params.id);
-  if (result) res.send(result);
+  if (result) res.send(postService.parsePost(result));
   else
     res.status(404).send({
       status: 404,
