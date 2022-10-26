@@ -12,7 +12,11 @@ const getLobby = async (userId: string, postId: string) => {
       postId: postId,
     },
     include: {
-      post: true,
+      post: {
+        select: {
+          users: true,
+        },
+      },
     },
   });
 
