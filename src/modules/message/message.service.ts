@@ -12,7 +12,7 @@ const getChat = async (postId: string) => {
       author: true,
     },
     orderBy: {
-      date: "asc",
+      date: "desc",
     },
   });
 };
