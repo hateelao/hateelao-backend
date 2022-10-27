@@ -99,13 +99,23 @@ const deleteUser = async (targetFirebaseId: string) => {
   });
 };
 
-const getUserPosts = async (userId: string) => {
+const getUserPosts = async (targetFirebaseId: string) => {
   return await prisma.UserWithStatus.findMany({
     where: {
-      userId: userId,
+      user: {
+        firebaseId: targetFirebaseId,
+      },
     },
     include: {
-      post: true,
+      post: {
+        include: {
+          users: {
+            include: {
+              user: true,
+            },
+          },
+        },
+      },
     },
   });
 };
